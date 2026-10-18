@@ -69,7 +69,7 @@ button:focus-visible,select:focus-visible,.cell:focus-visible{outline:3px solid 
 <header class="hero"><span class="badge">PLAY • LEARN • GROW</span>
 <h1><svg class="hi" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#a-owl"/></svg> Little Brain Games <svg class="hi" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#a-frog"/></svg></h1>
 <p><strong>Sudoku for Kids</strong></p>
-<p>Fill the grid so every row, every column and every box has each picture or number just once.</p></header>
+<p>Fill the grid so every row, every column and every box has each picture or number just once.</p></header><div class="demo-banner" style="max-width:720px;margin:0 auto 14px;padding:10px 14px;border-radius:14px;background:#fff4d6;border:2px dashed #f0b44c;text-align:center;font-weight:600;line-height:1.4">🎁 Free demo · Demo gratis — <a href="https://lynk.id/eyuliana75" target="_blank" rel="noopener" style="color:#c2410c">unlock all levels on Lynk · buka semua level di Lynk</a></div>
 
 <section class="panel" aria-label="Sudoku game">
   <div class="levels" role="group" aria-label="Choose a level" id="levels"></div>
@@ -100,9 +100,9 @@ button:focus-visible,select:focus-visible,.cell:focus-visible{outline:3px solid 
 const LEVELS=[
   {id:'pic',  name:'Starter', sub:'4×4 animals', n:4,br:2,bc:2,givens:8, pics:true, age:'ages 4–6'},
   {id:'easy', name:'Easy',    sub:'4×4 numbers', n:4,br:2,bc:2,givens:6, pics:false,age:'ages 5–7'},
-  {id:'med',  name:'Medium',  sub:'6×6',         n:6,br:2,bc:3,givens:16,pics:false,age:'ages 6–8'},
-  {id:'tricky',name:'Tricky', sub:'9×9',         n:9,br:3,bc:3,givens:38,pics:false,age:'ages 8–10'},
-  {id:'chal', name:'Challenge',sub:'9×9',        n:9,br:3,bc:3,givens:31,pics:false,age:'ages 10+'}
+  {id:'med',locked:true,  name:'Medium',  sub:'6×6',         n:6,br:2,bc:3,givens:16,pics:false,age:'ages 6–8'},
+  {id:'tricky',locked:true,name:'Tricky', sub:'9×9',         n:9,br:3,bc:3,givens:38,pics:false,age:'ages 8–10'},
+  {id:'chal',locked:true, name:'Challenge',sub:'9×9',        n:9,br:3,bc:3,givens:31,pics:false,age:'ages 10+'}
 ];
 const ANIMALS=['fox','owl','frog','panda'], ANAME={fox:'Fox',owl:'Owl',frog:'Frog',panda:'Panda'};
 const $=id=>document.getElementById(id), store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -152,7 +152,7 @@ function newGame(level){
   stopTimer(); render(); save(); say('Tap a square, then tap '+(L.pics?'an animal.':'a number.'));
 }
 function load(){
-  const d=store.get(SAVE); const lv=d&&LEVELS.find(x=>x.id===d.level);
+  const d=store.get(SAVE); const lv=d&&LEVELS.find(x=>x.id===d.level&&!x.locked);
   if(lv&&d.sol&&d.cur){L=lv;S={sol:d.sol,puz:d.puz,cur:d.cur};hints=d.hints||0;seconds=d.seconds||0;solved=!!d.solved;render();say(solved?'Solved! Tap New puzzle for another one.':'Welcome back! Your puzzle is just as you left it.');}
   else newGame(LEVELS[0]);
 }
@@ -160,8 +160,8 @@ const glyph=v=>!v?'':L.pics?`<svg viewBox="0 0 100 100" aria-hidden="true" focus
 const nameOf=v=>L.pics?ANAME[ANIMALS[v-1]]:String(v);
 
 function renderLevels(){
-  $('levels').innerHTML=LEVELS.map(x=>`<button type="button" data-id="${x.id}" aria-pressed="${x===L}" title="${x.age}">${x.name}<small>${x.sub}</small></button>`).join('');
-  $('levels').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>newGame(LEVELS.find(x=>x.id===b.dataset.id))));
+  $('levels').innerHTML=LEVELS.map(x=>`<button type="button" data-id="${x.id}" aria-pressed="${x===L}" title="${x.age}"${x.locked?' style="opacity:.55"':''}>${x.locked?'🔒 ':''}${x.name}<small>${x.sub}</small></button>`).join('');
+  $('levels').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const lv=LEVELS.find(x=>x.id===b.dataset.id);if(lv.locked){say('🔒 '+lv.name+' is in the full version. Get all 5 levels at lynk.id/eyuliana75 · Level ini ada di versi lengkap.');return;}newGame(lv);}));
 }
 function render(){
   renderLevels();
