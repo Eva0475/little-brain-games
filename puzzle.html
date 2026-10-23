@@ -154,7 +154,7 @@ button:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
 <header class="hero"><span class="badge">PLAY • LEARN • GROW</span>
 <h1><svg class="hi" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#a-panda"/></svg> Little Brain Games <svg class="hi" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#a-lion"/></svg></h1>
 <p><strong>Picture Puzzle</strong></p>
-<p>Drag the pieces into the frame to finish the animal picture.</p></header><div class="demo-banner" style="max-width:720px;margin:0 auto 14px;padding:10px 14px;border-radius:14px;background:#fff4d6;border:2px dashed #f0b44c;text-align:center;font-weight:600;line-height:1.4">🎁 Free demo · Demo gratis — <a href="https://lynk.id/eyuliana75" target="_blank" rel="noopener" style="color:#c2410c">unlock all levels on Lynk · buka semua level di Lynk</a></div>
+<p>Drag the pieces into the frame to finish the animal picture.</p></header><div class="demo-banner" style="max-width:720px;margin:0 auto 14px;padding:10px 14px;border-radius:14px;background:#fff4d6;border:2px dashed #f0b44c;text-align:center;font-weight:600;line-height:1.4">🎁 Free demo · Demo gratis — <a href="https://lynk.id/littlebraingames" target="_blank" rel="noopener" style="color:#c2410c">unlock all levels on Lynk · buka semua level di Lynk</a></div>
 
 <section class="panel" aria-label="Picture puzzle game">
   <div class="levels" role="group" aria-label="Choose a level" id="levels"></div>
@@ -268,6 +268,9 @@ function build(){
     const p={g,r,c,tx:c*s,ty:r*s,x:tray.x+(k%n)*s+jx,y:tray.y+Math.floor(k/n)*s+jy,placed:false};
     pieces.push(p); move(p);
     g.addEventListener('pointerdown',e=>grab(e,p));
+    // Android Chrome ignores touch-action on SVG shapes, so it starts scrolling the page and cancels the drag.
+    // Blocking the touch start on a loose piece keeps the finger on the piece; empty board space still scrolls.
+    g.addEventListener('touchstart',e=>{if(!p.placed&&!finished)e.preventDefault();},{passive:false});
   }
   $('count').textContent=`0 / ${n*n}`;
   renderPickers(); persist();
@@ -331,7 +334,7 @@ function hint(){
 /* --- pickers --- */
 function renderPickers(){
   $('levels').innerHTML=LEVELS.map(x=>`<button type="button" data-id="${x.id}" aria-pressed="${x===L}" title="${x.age}"${x.locked?' style="opacity:.55"':''}>${x.locked?'🔒 ':''}${x.name}<small>${x.sub}</small></button>`).join('');
-  $('levels').querySelectorAll('button').forEach(b=>b.onclick=()=>{const lv=LEVELS.find(x=>x.id===b.dataset.id);if(lv.locked){say('🔒 '+lv.name+' is in the full version. Get all 4 levels at lynk.id/eyuliana75 · Level ini ada di versi lengkap.');return;}L=lv;build();});
+  $('levels').querySelectorAll('button').forEach(b=>b.onclick=()=>{const lv=LEVELS.find(x=>x.id===b.dataset.id);if(lv.locked){say('🔒 '+lv.name+' is in the full version. Get all 4 levels at lynk.id/littlebraingames · Level ini ada di versi lengkap.');return;}L=lv;build();});
   $('scenes').innerHTML=SCENES.map(x=>`<button type="button" data-id="${x[0]}" aria-pressed="${x===SC}" aria-label="${x[1]}" title="${x[1]}"><svg viewBox="0 0 600 600" aria-hidden="true" focusable="false"><use href="#scene-${x[0]}"/></svg>${done[x[0]+'-'+L.id]?'<span class="tick">✓</span>':''}</button>`).join('');
   $('scenes').querySelectorAll('button').forEach(b=>b.onclick=()=>{SC=SCENES.find(x=>x[0]===b.dataset.id);build();});
 }

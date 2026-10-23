@@ -69,7 +69,7 @@ button:focus-visible,select:focus-visible,.cell:focus-visible{outline:3px solid 
 <header class="hero"><span class="badge">PLAY • LEARN • GROW</span>
 <h1><svg class="hi" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#a-owl"/></svg> Little Brain Games <svg class="hi" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#a-frog"/></svg></h1>
 <p><strong>Sudoku for Kids</strong></p>
-<p>Fill the grid so every row, every column and every box has each picture or number just once.</p></header><div class="demo-banner" style="max-width:720px;margin:0 auto 14px;padding:10px 14px;border-radius:14px;background:#fff4d6;border:2px dashed #f0b44c;text-align:center;font-weight:600;line-height:1.4">🎁 Free demo · Demo gratis — <a href="https://lynk.id/eyuliana75" target="_blank" rel="noopener" style="color:#c2410c">unlock all levels on Lynk · buka semua level di Lynk</a></div>
+<p>Fill the grid so every row, every column and every box has each picture or number just once.</p></header><div class="demo-banner" style="max-width:720px;margin:0 auto 14px;padding:10px 14px;border-radius:14px;background:#fff4d6;border:2px dashed #f0b44c;text-align:center;font-weight:600;line-height:1.4">🎁 Free demo · Demo gratis — <a href="https://lynk.id/littlebraingames" target="_blank" rel="noopener" style="color:#c2410c">unlock all levels on Lynk · buka semua level di Lynk</a></div>
 
 <section class="panel" aria-label="Sudoku game">
   <div class="levels" role="group" aria-label="Choose a level" id="levels"></div>
@@ -161,7 +161,7 @@ const nameOf=v=>L.pics?ANAME[ANIMALS[v-1]]:String(v);
 
 function renderLevels(){
   $('levels').innerHTML=LEVELS.map(x=>`<button type="button" data-id="${x.id}" aria-pressed="${x===L}" title="${x.age}"${x.locked?' style="opacity:.55"':''}>${x.locked?'🔒 ':''}${x.name}<small>${x.sub}</small></button>`).join('');
-  $('levels').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const lv=LEVELS.find(x=>x.id===b.dataset.id);if(lv.locked){say('🔒 '+lv.name+' is in the full version. Get all 5 levels at lynk.id/eyuliana75 · Level ini ada di versi lengkap.');return;}newGame(lv);}));
+  $('levels').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const lv=LEVELS.find(x=>x.id===b.dataset.id);if(lv.locked){say('🔒 '+lv.name+' is in the full version. Get all 5 levels at lynk.id/littlebraingames · Level ini ada di versi lengkap.');return;}newGame(lv);}));
 }
 function render(){
   renderLevels();
